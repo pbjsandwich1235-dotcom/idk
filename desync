@@ -1,0 +1,55 @@
+local function enableMobileDesync()
+        local a = game:GetService("Players")
+        local b = game:GetService("ReplicatedStorage")
+        local c = a.LocalPlayer
+        local d = c:WaitForChild("Backpack")
+        local f = b:WaitForChild("Packages"):WaitForChild("Net")
+        local g = f:WaitForChild("RE/UseItem")
+        local h = f:WaitForChild("RE/QuantumCloner/OnTeleport")
+        local function executeAntiHit()
+            local s = c.Character or c.CharacterAdded:Wait()
+            local t = d:FindFirstChild("Quantum Cloner") or s:FindFirstChild("Quantum Cloner")
+            if t and d:FindFirstChild(t.Name) then
+                c.Character.Humanoid:EquipTool(t)
+            end
+            setfflag("WorldStepMax", -2147483648)
+            task.wait(0.2)
+            g:FireServer()
+            task.wait(0.3)
+            h:FireServer()
+            setfflag("S2PhysicsSenderRate", "-100")
+            setfflag("SimBlockLargeLocalToolWeldManipulationsThreshold", "-1")
+            setfflag("MaxMissedWorldStepsRemembered", "0")
+            setfflag("DebugSimPrimalStiffnessMax", "0")
+            setfflag("DebugSimPrimalStiffnessMin", "0")
+            setfflag("ReplicatorAnimationTrackLimitPerAnimator", "-1")
+            setfflag("PhysicsSkipNonRealTimeHumanoidForceCalc2", "True")
+            task.wait(0.7)
+            setfflag("WorldStepMax", -1)
+        end
+        executeAntiHit()
+        print("✅ Mobile Desync activated!")
+end)
+end
+local function disableMobileDesync()
+        setfflag("S2PhysicsSenderRate", "60")
+        setfflag("SimBlockLargeLocalToolWeldManipulationsThreshold", "100")
+        setfflag("MaxMissedWorldStepsRemembered", "1000")
+        setfflag("DebugSimPrimalStiffnessMax", "100")
+        setfflag("DebugSimPrimalStiffnessMin", "100")
+        setfflag("ReplicatorAnimationTrackLimitPerAnimator", "10")
+        setfflag("PhysicsSkipNonRealTimeHumanoidForceCalc2", "False")
+        setfflag("WorldStepMax", -1)
+        print("❌ Mobile Desync disabled - all flags reset!")
+end)
+end
+createButton(_G.togglesSection, "Toggle Mobile Desync", function()
+    createCircularToggleUI("Mobile Desync", function() return _G.mobileDesyncEnabled end, function(state)
+        _G.mobileDesyncEnabled = state
+        if state then
+            enableMobileDesync()
+        else
+            disableMobileDesync()
+        end
+end)
+end)
